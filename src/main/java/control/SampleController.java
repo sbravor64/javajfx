@@ -6,9 +6,4 @@ import java.awt.*;
 
 public class SampleController {
 
-    @FXML
-    public void onClick(ActionEvent event) {
-        System.out.println("hola");
-    }
-
 }
