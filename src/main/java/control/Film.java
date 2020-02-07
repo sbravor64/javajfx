@@ -24,9 +24,9 @@ public class Film implements Serializable {
 
     @XmlElement(name="SINOPSI")
     String sinopsi;
-//
-//    @XmlElement(name = "CARTELL")
-//    private String image;
+
+    @XmlElement(name = "CARTELL")
+    private String image;
 
     @XmlElement(name="IDIOMA_x0020_ORIGINAL")
     String idioma;
@@ -57,9 +57,9 @@ public class Film implements Serializable {
                 "Direccio: " + direccio + "\n";
     }
 
-//    public String getImage() {
-//        return image;
-//    }
+    public String getImage() {
+        return image;
+    }
 
     public String getBuscar() {
         return buscar;

@@ -11,10 +11,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import javax.swing.text.Element;
 import javax.swing.text.html.ImageView;
 import javax.xml.bind.JAXBException;
 import java.awt.event.MouseEvent;
@@ -27,6 +29,10 @@ import java.util.stream.Collectors;
 
 public class SampleController implements Initializable {
     ConexionXML conexionXML;
+    List<String> images;
+    String url = "http://www.gencat.cat/llengua/cinema/";
+
+    Image imageMovie;
 
     List<Film> films;
     List<Sesion> sesions;
@@ -42,8 +48,8 @@ public class SampleController implements Initializable {
     @FXML
     private Text textTitleFilm;
 
-//    @FXML
-//    private ImageView imageFilm;
+    @FXML
+    private ImageView imageFilm;
 
 
     @Override
@@ -97,6 +103,7 @@ public class SampleController implements Initializable {
         films = conexionXML.getFilms();
 
         List<String> listaTitle = films.stream().map(film -> film.getTitol()).collect(Collectors.toList());
+        images = films.stream().map(film -> film.getImage()).collect(Collectors.toList());
 
         listObservable.addAll(listaTitle);
         listViewFilms.getItems().addAll(listObservable);
@@ -104,6 +111,10 @@ public class SampleController implements Initializable {
 
     public void displaySelected(javafx.scene.input.MouseEvent mouseEvent) {
         String film = listViewFilms.getSelectionModel().getSelectedItem();
+
+        imageMovie = new Image(url+images.get(0));
+        imageFilm = new ImageView((Element) imageMovie);
+
         if(film==null|| film.isEmpty()){
             textTitleFilm.setText("No has seleccionado ninguna pelicula");
         } else {
