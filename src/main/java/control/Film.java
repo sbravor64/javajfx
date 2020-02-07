@@ -1,14 +1,9 @@
+package control;
+
 import javax.xml.bind.annotation.*;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
-
-@XmlRootElement(name = "dataroot")
-@XmlAccessorType(XmlAccessType.PROPERTY)
-class Films {
-    @XmlElement(name="FILM")
-    List<Film> filmsList;
-}
 
 public class Film implements Serializable {
 
@@ -93,3 +88,4 @@ public class Film implements Serializable {
         return idioma;
     }
 }
+
