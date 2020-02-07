@@ -15,6 +15,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import javax.swing.text.html.ImageView;
 import javax.xml.bind.JAXBException;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
@@ -42,10 +43,8 @@ public class SampleController implements Initializable {
     private Text textTitleFilm;
 
 //    @FXML
-//    private Button buttonVerFilm;
+//    private ImageView imageFilm;
 
-    @FXML
-//    private TextField infoFilm;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {

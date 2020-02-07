@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
@@ -30,6 +31,8 @@
                                     <Font name="System Bold" size="16.0" />
                                  </font>
                               </Text>
+                              <Text fill="WHITE" layoutX="171.0" layoutY="35.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Sesion" wrappingWidth="52.7294921875" />
+                              <ImageView fx:id="imageFilm" fitHeight="143.0" fitWidth="117.0" layoutX="7.0" layoutY="30.0" pickOnBounds="true" preserveRatio="true" />
                            </children></AnchorPane>
                      </children>
                   </AnchorPane>
