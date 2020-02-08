@@ -2,27 +2,19 @@ package control;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
-import javafx.scene.layout.StackPane;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-import javax.swing.text.Element;
-import javax.swing.text.html.ImageView;
 import javax.xml.bind.JAXBException;
-import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
@@ -32,15 +24,14 @@ public class SampleController implements Initializable {
     List<String> images;
     String url = "http://www.gencat.cat/llengua/cinema/";
 
-    Image imageMovie;
-
     List<Film> films;
     List<Sesion> sesions;
     List<Cinema> cinemas;
     List<Cicle> cicles;
 
-    ObservableList<String> listObservable =FXCollections.observableArrayList();
+    private double x=0, y=0;
 
+    ObservableList<String> listObservable =FXCollections.observableArrayList();
 
     @FXML
     private ListView<String> listViewFilms;
@@ -51,36 +42,36 @@ public class SampleController implements Initializable {
     @FXML
     private ImageView imageFilm;
 
+    @FXML
+    private Circle btnCerrar;
+
+    @FXML
+    private TabPane tabPane;
+
+    @FXML
+    private Text direcctorFilm;
+
+    @FXML
+    private Text directorTitle;
+
+    @FXML
+    private Text añoFilm;
+
+    @FXML
+    private Text añoTitle;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
             connectedXML();
             loadFilms();
+            makeDragable();
+            opaqueInfoMovie();
         } catch (JAXBException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-//        buttonVerFilm.setOnAction(new EventHandler<ActionEvent>() {
-//            @Override
-//            public void handle(ActionEvent event) {
-//                Label secondLabel = new Label("I'm a Label on new Window");
-//
-//                StackPane secondaryLayout = new StackPane();
-//                secondaryLayout.getChildren().add(secondLabel);
-//
-//                Scene secondScene = new Scene(secondaryLayout, 300, 200);
-//
-//                // New window (Stage)
-//                Stage newWindow = new Stage();
-//                newWindow.setTitle("Second Stage");
-//                newWindow.setScene(secondScene);
-//
-//                newWindow.show();
-//            }
-//        });
     }
 
     private void connectedXML() throws JAXBException, IOException {
@@ -110,15 +101,60 @@ public class SampleController implements Initializable {
     }
 
     public void displaySelected(javafx.scene.input.MouseEvent mouseEvent) {
-        String film = listViewFilms.getSelectionModel().getSelectedItem();
+        String filmTitle = listViewFilms.getSelectionModel().getSelectedItem();
+        String direccion;
 
-        imageMovie = new Image(url+images.get(0));
-        imageFilm = new ImageView((Element) imageMovie);
-
-        if(film==null|| film.isEmpty()){
+        if(filmTitle==null|| filmTitle.isEmpty()){
             textTitleFilm.setText("No has seleccionado ninguna pelicula");
         } else {
-            textTitleFilm.setText(film);
+            visibleInfoMovie();
+            textTitleFilm.setText(filmTitle);
+            for (Film f: films) {
+                if(f.getTitol().equals(filmTitle)){
+                    String urlImage=url+f.getImage();
+                    Image imageMovie = new Image(urlImage);
+                    imageFilm.setImage(imageMovie);
+                    direcctorFilm.setText(f.getDireccio());
+                    añoFilm.setText(String.valueOf(f.getAny()));
+                }
+            }
         }
+    }
+
+    public void handlerMouseEvent(MouseEvent mouseEvent) {
+        if(mouseEvent.getSource() == btnCerrar){
+//            System.exit(0);
+            Stage stage = (Stage) btnCerrar.getScene().getWindow();
+            stage.close();
+        }
+    }
+
+    public void makeDragable(){
+        tabPane.setOnMousePressed((event -> {
+            x=event.getSceneX();
+            y=event.getSceneY();
+        }));
+
+        tabPane.setOnMouseDragged((event -> {
+            Stage stage = (Stage) btnCerrar.getScene().getWindow();
+            stage.setX(event.getScreenX()-x);
+            stage.setY(event.getScreenY()-y);
+        }));
+    }
+
+    public void visibleInfoMovie(){
+        textTitleFilm.setVisible(true);
+        direcctorFilm.setVisible(true);
+        directorTitle.setVisible(true);
+        añoFilm.setVisible(true);
+        añoTitle.setVisible(true);
+    }
+
+    public void opaqueInfoMovie(){
+        textTitleFilm.setVisible(false);
+        direcctorFilm.setVisible(false);
+        directorTitle.setVisible(false);
+        añoFilm.setVisible(false);
+        añoTitle.setVisible(false);
     }
 }

@@ -4,35 +4,42 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
 
 <AnchorPane prefHeight="500.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="control.SampleController">
    <children>
-      <TabPane prefHeight="500.0" prefWidth="800.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <TabPane fx:id="tabPane" prefHeight="500.0" prefWidth="800.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <tabs>
           <Tab text="Peliculas">
             <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: #009da7;">
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: #44007A;">
                      <children>
-                        <Text fill="WHITE" layoutX="281.0" layoutY="414.0" lineSpacing="100.0" strokeType="OUTSIDE" strokeWidth="0.0" text="CINEMA" AnchorPane.bottomAnchor="40.2646484375" AnchorPane.leftAnchor="281.0" AnchorPane.rightAnchor="281.6689453125" AnchorPane.topAnchor="363.8759765625">
-                           <font>
-                              <Font name="System Bold" size="54.0" />
-                           </font>
-                        </Text>
-                        <ListView fx:id="listViewFilms" onMouseClicked="#displaySelected" prefHeight="237.0" prefWidth="305.0" style="-fx-background-color: #00555b;" AnchorPane.bottomAnchor="140.0" AnchorPane.leftAnchor="58.0" AnchorPane.topAnchor="90.0">
+                        <ListView fx:id="listViewFilms" layoutX="53.0" layoutY="62.0" onMouseClicked="#displaySelected" prefHeight="346.0" prefWidth="305.0" style="-fx-background-color: #540096;" AnchorPane.bottomAnchor="63.0" AnchorPane.leftAnchor="53.0" AnchorPane.rightAnchor="442.0" AnchorPane.topAnchor="62.0">
                            <padding>
                               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                            </padding>
                         </ListView>
-                        <AnchorPane layoutX="443.0" layoutY="90.0" prefHeight="237.0" prefWidth="305.0" AnchorPane.bottomAnchor="140.0" AnchorPane.leftAnchor="443.0" AnchorPane.rightAnchor="52.0" AnchorPane.topAnchor="90.0">
+                        <AnchorPane cache="true" layoutX="412.0" layoutY="-8.0" prefHeight="486.0" prefWidth="396.0" style="-fx-background-color: white;" AnchorPane.bottomAnchor="-7.0" AnchorPane.leftAnchor="412.0" AnchorPane.rightAnchor="-8.0" AnchorPane.topAnchor="-8.0">
                            <children>
-                              <Text fx:id="textTitleFilm" fill="WHITE" layoutX="19.0" layoutY="19.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Titulo" wrappingWidth="266.7294921875">
+                              <Text fx:id="textTitleFilm" fill="#7c7c7c" layoutX="32.0" layoutY="90.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Titulo" wrappingWidth="319.7294921875" AnchorPane.bottomAnchor="391.984375" AnchorPane.leftAnchor="32.0" AnchorPane.rightAnchor="44.2705078125" AnchorPane.topAnchor="72.734375">
                                  <font>
                                     <Font name="System Bold" size="16.0" />
                                  </font>
                               </Text>
-                              <Text fill="WHITE" layoutX="171.0" layoutY="35.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Sesion" wrappingWidth="52.7294921875" />
-                              <ImageView fx:id="imageFilm" fitHeight="143.0" fitWidth="117.0" layoutX="7.0" layoutY="30.0" pickOnBounds="true" preserveRatio="true" />
+                              <ImageView fx:id="imageFilm" fitHeight="181.0" fitWidth="114.0" layoutX="32.0" layoutY="119.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="186.0" AnchorPane.leftAnchor="32.0" AnchorPane.rightAnchor="250.0" AnchorPane.topAnchor="119.0" />
+                              <Text fx:id="directorTitle" fill="#616161" layoutX="176.0" layoutY="158.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Dirección:">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Text>
+                              <Text fx:id="direcctorFilm" fill="#4a4a4a" layoutX="176.0" layoutY="177.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" wrappingWidth="182.13671875" />
+                              <Text fx:id="añoTitle" fill="#616161" layoutX="176.0" layoutY="136.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Año:">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Text>
+                              <Text fx:id="añoFilm" fill="#4a4a4a" layoutX="207.0" layoutY="136.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
                            </children></AnchorPane>
                      </children>
                   </AnchorPane>
@@ -49,6 +56,12 @@
           </Tab>
         </tabs>
       </TabPane>
+      <HBox layoutX="715.0" prefHeight="28.0" prefWidth="72.0">
+         <children>
+            <Circle fx:id="bntMinimizar" fill="#68c927" onMouseClicked="#handlerMouseEvent" radius="14.0" scaleX="0.5" scaleY="0.5" scaleZ="0.5" stroke="#99999900" strokeType="INSIDE" strokeWidth="2.0" />
+            <Circle fx:id="btnAmpliar" fill="#ffba52" onMouseClicked="#handlerMouseEvent" radius="14.0" scaleX="0.5" scaleY="0.5" scaleZ="0.5" stroke="#99999900" strokeType="INSIDE" strokeWidth="2.0" />
+            <Circle fx:id="btnCerrar" fill="#ff5100" onMouseClicked="#handlerMouseEvent" radius="14.0" scaleX="0.5" scaleY="0.5" scaleZ="0.5" stroke="#99999900" strokeType="INSIDE" strokeWidth="2.0" />
+         </children></HBox>
 
    </children>
 </AnchorPane>
