@@ -2,24 +2,33 @@ package control;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Side;
+import javafx.scene.chart.PieChart;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Comparator;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 public class SampleController implements Initializable {
+    private final ObservableList<PieChart.Data> dataCharts = FXCollections.observableArrayList();
+
     ConexionXML conexionXML;
     List<String> images;
     String url = "http://www.gencat.cat/llengua/cinema/";
@@ -60,6 +69,9 @@ public class SampleController implements Initializable {
     @FXML
     private Text añoTitle;
 
+    @FXML
+    private PieChart pieChart;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
@@ -67,11 +79,39 @@ public class SampleController implements Initializable {
             loadFilms();
             makeDragable();
             opaqueInfoMovie();
+            diagrama();
         } catch (JAXBException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void diagrama(){
+        List<Integer> años = films.stream()
+                .map(film -> film.getAny())
+                .filter(i -> i > 0 && i < 3000).distinct()
+                .sorted(Comparator.comparingInt(integer -> integer))
+                .collect(Collectors.toList());
+
+        for (Integer i: años) {
+            long numResultat= films.stream()
+                    .filter(film1 -> film1.getAny() == i)
+                    .count();
+            dataCharts.add(new PieChart.Data(i.toString(), numResultat));
+        }
+
+        pieChart.setData(dataCharts);
+        pieChart.setLegendSide(Side.LEFT);
+
+        final Label label = new Label();
+        label.setFont(Font.font("SanSerif", FontWeight.BOLD, 15));
+
+        pieChart.getData().stream().forEach(data -> {
+            data.getNode().addEventHandler(MouseEvent.ANY, e->{
+                label.setText(data.getName() + " " + data.getPieValue());
+            });
+        });
     }
 
     private void connectedXML() throws JAXBException, IOException {
@@ -102,7 +142,6 @@ public class SampleController implements Initializable {
 
     public void displaySelected(javafx.scene.input.MouseEvent mouseEvent) {
         String filmTitle = listViewFilms.getSelectionModel().getSelectedItem();
-        String direccion;
 
         if(filmTitle==null|| filmTitle.isEmpty()){
             textTitleFilm.setText("No has seleccionado ninguna pelicula");

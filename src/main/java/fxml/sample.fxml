@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.*?>
+<?import javafx.scene.chart.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
@@ -54,6 +55,14 @@
                      </children></AnchorPane>
             </content>
           </Tab>
+            <Tab text="Gráfico">
+                <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <PieChart fx:id="pieChart" layoutX="150.0" layoutY="34.0" />
+                     </children></AnchorPane>
+                </content>
+            </Tab>
         </tabs>
       </TabPane>
       <HBox layoutX="715.0" prefHeight="28.0" prefWidth="72.0">
