@@ -2,7 +2,6 @@ package control;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Side;
@@ -11,7 +10,8 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -40,7 +40,9 @@ public class SampleController implements Initializable {
 
     private double x=0, y=0;
 
-    ObservableList<String> listObservable =FXCollections.observableArrayList();
+    ObservableList<String> listObservableFilms =FXCollections.observableArrayList();
+    ObservableList<String> listObservableSesions =FXCollections.observableArrayList();
+
 
     @FXML
     private ListView<String> listViewFilms;
@@ -72,9 +74,24 @@ public class SampleController implements Initializable {
     @FXML
     private PieChart pieChart;
 
+    @FXML
+    private Pane pane;
+
+    @FXML
+    private Button buttonSesion;
+
+    @FXML
+    private AnchorPane  paneSesion;
+
+    @FXML Text sesionTitle;
+
+    @FXML
+    private ListView listViewSesions;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
+            pane.setVisible(false);
             connectedXML();
             loadFilms();
             makeDragable();
@@ -105,11 +122,18 @@ public class SampleController implements Initializable {
         pieChart.setLegendSide(Side.LEFT);
 
         final Label label = new Label();
-        label.setFont(Font.font("SanSerif", FontWeight.BOLD, 15));
+        pane.getChildren().add(label);
+        label.setFont(Font.font("SanSerif", FontWeight.BLACK, 20));
 
         pieChart.getData().stream().forEach(data -> {
             data.getNode().addEventHandler(MouseEvent.ANY, e->{
-                label.setText(data.getName() + " " + data.getPieValue());
+                int intValue = (int) data.getPieValue();
+                pane.setVisible(true);
+                if(intValue==1){
+                    label.setText(intValue + " pelicula");
+                }else {
+                    label.setText(intValue + " peliculas");
+                }
             });
         });
     }
@@ -136,8 +160,8 @@ public class SampleController implements Initializable {
         List<String> listaTitle = films.stream().map(film -> film.getTitol()).collect(Collectors.toList());
         images = films.stream().map(film -> film.getImage()).collect(Collectors.toList());
 
-        listObservable.addAll(listaTitle);
-        listViewFilms.getItems().addAll(listObservable);
+        listObservableFilms.addAll(listaTitle);
+        listViewFilms.getItems().addAll(listObservableFilms);
     }
 
     public void displaySelected(javafx.scene.input.MouseEvent mouseEvent) {
@@ -150,11 +174,20 @@ public class SampleController implements Initializable {
             textTitleFilm.setText(filmTitle);
             for (Film f: films) {
                 if(f.getTitol().equals(filmTitle)){
+
                     String urlImage=url+f.getImage();
                     Image imageMovie = new Image(urlImage);
+
                     imageFilm.setImage(imageMovie);
                     direcctorFilm.setText(f.getDireccio());
                     añoFilm.setText(String.valueOf(f.getAny()));
+
+                    List<String> listaCines = sesions.stream().filter(sesion -> f.getIdFilm() == sesion.getIdFilm()).map(sesion -> sesion.getNomCine()).collect(Collectors.toList());
+
+                    listObservableSesions.addAll(listaCines);
+
+                    listViewSesions.getItems().addAll(listObservableSesions);
+//                    sesionTitle.setText(s.getTitulo());
                 }
             }
         }
@@ -195,5 +228,9 @@ public class SampleController implements Initializable {
         directorTitle.setVisible(false);
         añoFilm.setVisible(false);
         añoTitle.setVisible(false);
+    }
+
+    public void clickFilmSesion(MouseEvent mouseEvent) {
+        paneSesion.toFront();
     }
 }

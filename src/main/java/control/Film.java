@@ -11,7 +11,7 @@ public class Film implements Serializable {
     String interprets;
 
     @XmlElement(name="IDFILM")
-    String idFilm;
+    int idFilm;
 
     @XmlElement(name="TITOL")
     String titol;
@@ -69,7 +69,7 @@ public class Film implements Serializable {
         this.buscar = buscar;
     }
 
-    public String getIdFilm() {
+    public int getIdFilm() {
         return idFilm;
     }
 
