@@ -1,22 +1,25 @@
-package control;
-
+import control.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Side;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
@@ -29,6 +32,8 @@ import java.util.stream.Collectors;
 public class SampleController implements Initializable {
     private final ObservableList<PieChart.Data> dataCharts = FXCollections.observableArrayList();
 
+    String tituloFilm;
+
     ConexionXML conexionXML;
     List<String> images;
     String url = "http://www.gencat.cat/llengua/cinema/";
@@ -40,9 +45,8 @@ public class SampleController implements Initializable {
 
     private double x=0, y=0;
 
+    ObservableList<Sesion> listObservableSesions =FXCollections.observableArrayList();
     ObservableList<String> listObservableFilms =FXCollections.observableArrayList();
-    ObservableList<String> listObservableSesions =FXCollections.observableArrayList();
-
 
     @FXML
     private ListView<String> listViewFilms;
@@ -79,14 +83,6 @@ public class SampleController implements Initializable {
 
     @FXML
     private Button buttonSesion;
-
-    @FXML
-    private AnchorPane  paneSesion;
-
-    @FXML Text sesionTitle;
-
-    @FXML
-    private ListView listViewSesions;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -182,15 +178,29 @@ public class SampleController implements Initializable {
                     direcctorFilm.setText(f.getDireccio());
                     añoFilm.setText(String.valueOf(f.getAny()));
 
-                    List<String> listaCines = sesions.stream().filter(sesion -> f.getIdFilm() == sesion.getIdFilm()).map(sesion -> sesion.getNomCine()).collect(Collectors.toList());
+                    //atributos que envio a la nueva ventana
+                    tituloFilm = f.getTitol();
+                    List<Sesion> listaSesionesFilm = sesions.stream().filter(sesion -> f.getIdFilm() == sesion.getIdFilm()).collect(Collectors.toList());
+                    listaSesionesFilm.forEach(System.out::println);
+                    listObservableSesions.addAll(listaSesionesFilm);
 
-                    listObservableSesions.addAll(listaCines);
-
-                    listViewSesions.getItems().addAll(listObservableSesions);
-//                    sesionTitle.setText(s.getTitulo());
                 }
             }
         }
+    }
+
+    public void newPage(ActionEvent event) throws IOException {
+        Stage stage = new Stage();
+        FXMLLoader loader = new FXMLLoader();
+
+        Parent root = loader.load(getClass().getResource("sesion.fxml").openStream());
+
+        SesionController sesionController = loader.getController();
+        sesionController.recibeInfoSesiones(tituloFilm, listObservableSesions);
+
+        stage.setScene(new Scene(root));
+        stage.initStyle(StageStyle.UNDECORATED);
+        stage.show();
     }
 
     public void handlerMouseEvent(MouseEvent mouseEvent) {
@@ -230,7 +240,4 @@ public class SampleController implements Initializable {
         añoTitle.setVisible(false);
     }
 
-    public void clickFilmSesion(MouseEvent mouseEvent) {
-        paneSesion.toFront();
-    }
 }

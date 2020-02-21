@@ -25,6 +25,12 @@ public class Sesion implements Serializable {
     @XmlElement(name="CICLEID")
     String cicleID;
 
+    @XmlElement(name="ses_data")
+    String fecha;
+
+    @XmlElement(name="ORDRESESSIO")
+    String sesionOrdre;
+
     public Sesion() {
         super();
     }
@@ -39,6 +45,8 @@ public class Sesion implements Serializable {
                 ", nomCine='" + nomCine + '\'' +
                 ", localidad='" + localidad + '\'' +
                 ", cicleID='" + cicleID + '\'' +
+                ", fecha='" + fecha + '\'' +
+                ", sesionOrdre='" + sesionOrdre + '\'' +
                 '}';
     }
 
@@ -68,5 +76,13 @@ public class Sesion implements Serializable {
 
     public String getCicleID() {
         return cicleID;
+    }
+
+    public String getFecha() {
+        return fecha;
+    }
+
+    public String getSesionOrdre() {
+        return sesionOrdre;
     }
 }

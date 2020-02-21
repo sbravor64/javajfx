@@ -12,9 +12,6 @@ import java.io.IOException;
 
 public class MainApp extends Application {
 
-    private double xOffset = 0;
-    private double yOffset = 0;
-
     public static void main(String[] args) {
         launch(args);
     }
