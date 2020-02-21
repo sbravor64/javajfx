@@ -31,6 +31,8 @@ public class Sesion implements Serializable {
     @XmlElement(name="ORDRESESSIO")
     String sesionOrdre;
 
+
+
     public Sesion() {
         super();
     }

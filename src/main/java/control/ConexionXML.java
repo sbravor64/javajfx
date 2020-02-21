@@ -1,7 +1,4 @@
 package control;
-
-import control.Films;
-
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
@@ -72,4 +69,5 @@ public class ConexionXML {
     public List<Sesion> getSesions() {
         return sesions;
     }
+
 }

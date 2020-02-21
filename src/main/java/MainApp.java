@@ -25,6 +25,7 @@ public class MainApp extends Application {
 
         stage.initStyle(StageStyle.UNDECORATED);
         stage.setScene(scene);
+//        stage.setResizable(false);
         stage.show();
     }
 }

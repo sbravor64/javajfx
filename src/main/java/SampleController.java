@@ -47,42 +47,54 @@ public class SampleController implements Initializable {
 
     ObservableList<Sesion> listObservableSesions =FXCollections.observableArrayList();
     ObservableList<String> listObservableFilms =FXCollections.observableArrayList();
+    ObservableList<String> listObservableCicles =FXCollections.observableArrayList();
 
+
+    // atributos de la pelicula
     @FXML
     private ListView<String> listViewFilms;
-
     @FXML
     private Text textTitleFilm;
-
     @FXML
     private ImageView imageFilm;
+    @FXML
+    private Text direcctorFilm;
+    @FXML
+    private Text directorTitle;
+    @FXML
+    private Text añoFilm;
+    @FXML
+    private Text añoTitle;
+    @FXML
+    private TextField textFieldPelicula;
+    @FXML
+    private Button buttonBuscar;
+
+    // atributos del ciclo
+    @FXML
+    private ListView<String> listViewCiclos;
+    @FXML
+    private Text textTitleCiclo;
+    @FXML
+    private Text infoCiclo;
+    @FXML
+    private ImageView imageCiclo;
 
     @FXML
     private Circle btnCerrar;
-
     @FXML
     private TabPane tabPane;
-
-    @FXML
-    private Text direcctorFilm;
-
-    @FXML
-    private Text directorTitle;
-
-    @FXML
-    private Text añoFilm;
-
-    @FXML
-    private Text añoTitle;
-
-    @FXML
-    private PieChart pieChart;
-
     @FXML
     private Pane pane;
 
+    //diagrama 1
+    @FXML
+    private PieChart pieChart;
+
+
     @FXML
     private Button buttonSesion;
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -90,6 +102,7 @@ public class SampleController implements Initializable {
             pane.setVisible(false);
             connectedXML();
             loadFilms();
+            loadCiclos();
             makeDragable();
             opaqueInfoMovie();
             diagrama();
@@ -100,6 +113,7 @@ public class SampleController implements Initializable {
         }
     }
 
+    //
     private void diagrama(){
         List<Integer> años = films.stream()
                 .map(film -> film.getAny())
@@ -147,11 +161,7 @@ public class SampleController implements Initializable {
         cicles = conexionXML.getCicles();
     }
 
-    private void loadFilms() throws JAXBException, IOException {
-        conexionXML = new ConexionXML();
-        conexionXML.connectedFilms();
-
-        films = conexionXML.getFilms();
+    private void loadFilms() {
 
         List<String> listaTitle = films.stream().map(film -> film.getTitol()).collect(Collectors.toList());
         images = films.stream().map(film -> film.getImage()).collect(Collectors.toList());
@@ -160,29 +170,52 @@ public class SampleController implements Initializable {
         listViewFilms.getItems().addAll(listObservableFilms);
     }
 
+    private void loadCiclos(){
+        List<String> listaTitle = cicles.stream().map(sesion -> sesion.getNombre()).collect(Collectors.toList());
+        listObservableCicles.addAll(listaTitle);
+        listViewCiclos.getItems().addAll(listObservableCicles);
+    }
+
     public void displaySelected(javafx.scene.input.MouseEvent mouseEvent) {
-        String filmTitle = listViewFilms.getSelectionModel().getSelectedItem();
 
-        if(filmTitle==null|| filmTitle.isEmpty()){
-            textTitleFilm.setText("No has seleccionado ninguna pelicula");
-        } else {
-            visibleInfoMovie();
-            textTitleFilm.setText(filmTitle);
-            for (Film f: films) {
-                if(f.getTitol().equals(filmTitle)){
+        if(mouseEvent.getSource() == listViewFilms){
+            String filmTitle = listViewFilms.getSelectionModel().getSelectedItem();
+            List<Sesion> listaSesionesFilm;
+            if(filmTitle==null|| filmTitle.isEmpty()){
+                textTitleFilm.setText("No has seleccionado ninguna pelicula");
+            } else {
+                visibleInfoMovie();
+                textTitleFilm.setText(filmTitle);
+                for (Film f: films) {
+                    if(f.getTitol().equals(filmTitle)){
 
-                    String urlImage=url+f.getImage();
-                    Image imageMovie = new Image(urlImage);
+                        imageFilm.setImage(new Image(url+f.getImage()));
+                        direcctorFilm.setText(f.getDireccio());
+                        añoFilm.setText(String.valueOf(f.getAny()));
 
-                    imageFilm.setImage(imageMovie);
-                    direcctorFilm.setText(f.getDireccio());
-                    añoFilm.setText(String.valueOf(f.getAny()));
+                        listObservableSesions.clear();
 
-                    //atributos que envio a la nueva ventana
-                    tituloFilm = f.getTitol();
-                    List<Sesion> listaSesionesFilm = sesions.stream().filter(sesion -> f.getIdFilm() == sesion.getIdFilm()).collect(Collectors.toList());
-                    listaSesionesFilm.forEach(System.out::println);
-                    listObservableSesions.addAll(listaSesionesFilm);
+                        //atributos que envio a la nueva ventana (sesiones)
+                        tituloFilm = f.getTitol();
+                        listaSesionesFilm = sesions.stream().filter(sesion -> f.getIdFilm() == sesion.getIdFilm()).collect(Collectors.toList());
+                        listObservableSesions.addAll(listaSesionesFilm);
+
+                        listaSesionesFilm.clear();
+                    }
+                }
+            }
+        } else if(mouseEvent.getSource() == listViewCiclos){
+            String cicleTitle = listViewCiclos.getSelectionModel().getSelectedItem();
+            textTitleCiclo.setText(cicleTitle);
+
+            for (Cicle c: cicles) {
+                if(c.getNombre().equals(cicleTitle)){
+                    infoCiclo.setText(c.getInfo());
+                    imageCiclo.setImage(new Image(url+c.getImg()));
+
+                    listObservableCicles.clear();
+
+                    //atributos que envio a la nueva ventana (films)
 
                 }
             }
@@ -240,4 +273,15 @@ public class SampleController implements Initializable {
         añoTitle.setVisible(false);
     }
 
+    public void buscador(MouseEvent mouseEvent) {
+        listObservableFilms.clear();
+        String titulo = textFieldPelicula.getText();
+
+        List<String> listaTitle = films.stream().filter(film -> film.getTitol().toLowerCase().contains(titulo)).map(film -> film.getTitol()).collect(Collectors.toList());
+
+        listObservableFilms.addAll(listaTitle);
+        listViewFilms.getItems().clear();
+        listViewFilms.getItems().addAll(listObservableFilms);
+
+    }
 }

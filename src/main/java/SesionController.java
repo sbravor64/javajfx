@@ -68,7 +68,6 @@ public class SesionController implements Initializable {
         if(mouseEvent.getSource() == btnCerrar){
 //            System.exit(0);
             Stage stage = (Stage) btnCerrar.getScene().getWindow();
-            listObservableSesions.clear();
 //            tableViewSesiones.getItems().clear();
             stage.close();
         }
