@@ -23,7 +23,7 @@ public class Sesion implements Serializable {
     String localidad;
 
     @XmlElement(name="CICLEID")
-    String cicleID;
+    int cicleID;
 
     @XmlElement(name="ses_data")
     String fecha;
@@ -76,7 +76,7 @@ public class Sesion implements Serializable {
         return localidad;
     }
 
-    public String getCicleID() {
+    public int getCicleID() {
         return cicleID;
     }
 

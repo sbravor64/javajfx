@@ -49,7 +49,7 @@
                                              </font>
                                           </Text>
                                           <Text fx:id="añoFilm" fill="#4a4a4a" layoutX="170.0" layoutY="151.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
-                                          <Button fx:id="buttonSesion" layoutX="247.0" layoutY="424.0" mnemonicParsing="false" onAction="#newPage" prefHeight="26.0" prefWidth="112.0" text="Sesiones" />
+                                          <Button fx:id="buttonSesion" layoutX="247.0" layoutY="424.0" mnemonicParsing="false" onAction="#PageSesion" prefHeight="26.0" prefWidth="112.0" text="Sesiones" />
                                        </children>
                                     </AnchorPane>
                                  </children>
@@ -73,7 +73,7 @@
                                     </Text>
                                     <ImageView fx:id="imageCiclo" fitHeight="181.0" fitWidth="114.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="186.0" AnchorPane.leftAnchor="32.0" AnchorPane.rightAnchor="250.0" AnchorPane.topAnchor="119.0" />
                                     <Text fx:id="infoCiclo" fill="#4a4a4a" layoutX="170.0" layoutY="130.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" wrappingWidth="182.13671875" />
-                                    <Button fx:id="buttonSesion1" layoutX="247.0" layoutY="424.0" mnemonicParsing="false" onAction="#newPage" prefHeight="26.0" prefWidth="112.0" text="Ver Peliculas" />
+                                    <Button fx:id="buttonCiclo" layoutX="247.0" layoutY="424.0" mnemonicParsing="false" onAction="#PageFilmsCiclo" prefHeight="26.0" prefWidth="112.0" text="Ver Peliculas" />
                                  </children>
                               </AnchorPane>
                               <ListView fx:id="listViewCiclos" layoutX="57.0" layoutY="59.0" onMouseClicked="#displaySelected" prefHeight="245.0" prefWidth="289.0" style="-fx-background-color: #540096;">

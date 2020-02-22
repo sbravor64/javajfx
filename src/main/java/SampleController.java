@@ -24,6 +24,7 @@ import javafx.stage.StageStyle;
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -33,6 +34,7 @@ public class SampleController implements Initializable {
     private final ObservableList<PieChart.Data> dataCharts = FXCollections.observableArrayList();
 
     String tituloFilm;
+    String tituloCiclo;
 
     ConexionXML conexionXML;
     List<String> images;
@@ -45,7 +47,9 @@ public class SampleController implements Initializable {
 
     private double x=0, y=0;
 
-    ObservableList<Sesion> listObservableSesions =FXCollections.observableArrayList();
+    ObservableList<Sesion> listObservableSesionsEnvio =FXCollections.observableArrayList();
+    ObservableList<Film> listObservableFilmsEnvio = FXCollections.observableArrayList();
+
     ObservableList<String> listObservableFilms =FXCollections.observableArrayList();
     ObservableList<String> listObservableCicles =FXCollections.observableArrayList();
 
@@ -188,17 +192,16 @@ public class SampleController implements Initializable {
                 textTitleFilm.setText(filmTitle);
                 for (Film f: films) {
                     if(f.getTitol().equals(filmTitle)){
-
                         imageFilm.setImage(new Image(url+f.getImage()));
                         direcctorFilm.setText(f.getDireccio());
                         añoFilm.setText(String.valueOf(f.getAny()));
 
-                        listObservableSesions.clear();
+                        listObservableSesionsEnvio.clear();
 
                         //atributos que envio a la nueva ventana (sesiones)
                         tituloFilm = f.getTitol();
                         listaSesionesFilm = sesions.stream().filter(sesion -> f.getIdFilm() == sesion.getIdFilm()).collect(Collectors.toList());
-                        listObservableSesions.addAll(listaSesionesFilm);
+                        listObservableSesionsEnvio.addAll(listaSesionesFilm);
 
                         listaSesionesFilm.clear();
                     }
@@ -208,28 +211,59 @@ public class SampleController implements Initializable {
             String cicleTitle = listViewCiclos.getSelectionModel().getSelectedItem();
             textTitleCiclo.setText(cicleTitle);
 
+            List<Film> listaFilmsCicle = new ArrayList<>();
+
             for (Cicle c: cicles) {
                 if(c.getNombre().equals(cicleTitle)){
                     infoCiclo.setText(c.getInfo());
                     imageCiclo.setImage(new Image(url+c.getImg()));
 
-                    listObservableCicles.clear();
-
+                    listObservableFilmsEnvio.clear();
                     //atributos que envio a la nueva ventana (films)
+
+                    tituloCiclo = c.getNombre();
+
+                    sesions.forEach(sesion -> {
+                        if(sesion.getCicleID()==c.getIdCiclo()){
+                            films.forEach(film -> {
+                                if(film.getIdFilm() == sesion.getCicleID()){
+                                    listaFilmsCicle.add(film);
+                                }
+                            });
+//                            listaFilmsCicle = films.stream().filter(film -> film.getIdFilm() == sesion.getCicleID()).collect(Collectors.toList());
+                        }
+                    });
+
+                    listObservableFilmsEnvio.addAll(listaFilmsCicle);
+                    listaFilmsCicle.clear();
 
                 }
             }
         }
     }
 
-    public void newPage(ActionEvent event) throws IOException {
+    public void PageSesion(ActionEvent event) throws IOException {
         Stage stage = new Stage();
         FXMLLoader loader = new FXMLLoader();
 
         Parent root = loader.load(getClass().getResource("sesion.fxml").openStream());
 
         SesionController sesionController = loader.getController();
-        sesionController.recibeInfoSesiones(tituloFilm, listObservableSesions);
+        sesionController.recibeInfoSesiones(tituloFilm, listObservableSesionsEnvio);
+
+        stage.setScene(new Scene(root));
+        stage.initStyle(StageStyle.UNDECORATED);
+        stage.show();
+    }
+
+    public void PageFilmsCiclo(ActionEvent event) throws IOException {
+        Stage stage = new Stage();
+        FXMLLoader loader = new FXMLLoader();
+
+        Parent root = loader.load(getClass().getResource("peliculas.fxml").openStream());
+
+        PeliculasController peliculasController = loader.getController();
+        peliculasController.recibeInfoSesiones(tituloCiclo, listObservableFilmsEnvio);
 
         stage.setScene(new Scene(root));
         stage.initStyle(StageStyle.UNDECORATED);
