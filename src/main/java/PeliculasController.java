@@ -22,23 +22,16 @@ public class PeliculasController implements Initializable {
 
     String tituloCiclo;
 
-
-
     @FXML
     private Text cicloTitle;
-
     @FXML
     private TableView<Sesion> tableViewPeliculas;
-
     @FXML
     private TableColumn<Sesion, String> tableColumnTitleFilm;
-
     @FXML
     private TableColumn<Sesion, String> tableColumnFecha;
-
     @FXML
     private TableColumn<Sesion, String> tableColumnTitleCine;
-
     @FXML
     private TableColumn<Sesion, String> tableColumnLocalidad;
 
@@ -46,6 +39,7 @@ public class PeliculasController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
     }
 
+    // método que recibirá los datos del HomeController para rellenar la tableView
     public void recibeInfoSesiones(String tituloCiclo, ObservableList<Sesion> listObservableFilms) {
         this.listObservableFilms = listObservableFilms;
         this.tituloCiclo = tituloCiclo;
@@ -53,6 +47,7 @@ public class PeliculasController implements Initializable {
         añadirPeliculas();
     }
 
+    // método donde añadiremos las peliculas que tiene el ciclo (evento) seleccionado
     private void añadirPeliculas() {
         tableColumnFecha.setCellValueFactory(new PropertyValueFactory("fecha"));
         tableColumnTitleFilm.setCellValueFactory(new PropertyValueFactory("titulo"));

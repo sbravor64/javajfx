@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class HomeController implements Initializable {
@@ -46,7 +45,6 @@ public class HomeController implements Initializable {
     private double x=0, y=0;
 
     ObservableList<Sesion> listObservableSesionsEnvio =FXCollections.observableArrayList();
-//    ObservableList<Film> listObservableFilmsEnvio = FXCollections.observableArrayList();
 
     ObservableList<String> listObservableFilms =FXCollections.observableArrayList();
     ObservableList<String> listObservableCicles =FXCollections.observableArrayList();
@@ -115,7 +113,7 @@ public class HomeController implements Initializable {
             connectedXML();
             loadFilms();
             loadCiclos();
-            opaqueInfo();
+            hideInfo();
             rellenardiagrama1();
             rellenarDiagrama2();
         } catch (JAXBException e) {
@@ -125,26 +123,33 @@ public class HomeController implements Initializable {
         }
     }
 
-    //
+    // método para rellenar el digrama 1
     private void rellenardiagrama1(){
+        // observableList para guardar los datos antes de añadirlos al PieChart
         ObservableList<PieChart.Data> dataCharts = FXCollections.observableArrayList();
 
+        // creamos una lista de integer para guardar los años de las peliculas
         List<Integer> años = films.stream()
                 .map(film -> film.getAny())
                 .filter(i -> i > 0 && i < 3000).distinct()
                 .sorted(Comparator.comparingInt(integer -> integer))
                 .collect(Collectors.toList());
 
+        // hacemos un for de la lista de años y creamos un contador
+        // para saber las peliculas que hay en un año
         for (Integer i: años) {
             long numResultat= films.stream()
                     .filter(film1 -> film1.getAny() == i)
                     .count();
+
+            // guardamos en el observableList los datos
             dataCharts.add(new PieChart.Data(i.toString(), numResultat));
         }
 
         pieChart.setData(dataCharts);
         pieChart.setLegendSide(Side.LEFT);
 
+        // OPCIONAL: ver el valor de cada dato poniendo el ratón por encima
         final Label label = new Label();
         pane.getChildren().add(label);
         label.setFont(Font.font("SanSerif", FontWeight.BLACK, 20));
@@ -162,21 +167,27 @@ public class HomeController implements Initializable {
         });
     }
 
+    // método para rellenar el digrama 2
     private void rellenarDiagrama2(){
         XYChart.Series dataCharts = new XYChart.Series<>();
 
+        // creamos una lista de String para guardar las provincias de los cines
         List<String> provincias = cinemas.stream()
                 .filter(cinema -> !cinema.getProvincia().equals("--"))
                 .map(cinema -> cinema.getProvincia())
                 .collect(Collectors.toList());
 
+        // hacemos un for de la lista de provincias y creamos un
+        // contador para saber los cines que hay en una provincia
         provincias.forEach(pro -> {
             long numResultat= cinemas.stream().filter(cinema -> cinema.getProvincia().equals(pro)).count();
             dataCharts.getData().add(new XYChart.Data(pro, numResultat));
         });
         barChart.getData().add(dataCharts);
+
     }
 
+    // método para conectarnos con los XML
     private void connectedXML() throws JAXBException, IOException {
         conexionXML = new ConexionXML();
         conexionXML.connectedFilms();
@@ -190,8 +201,8 @@ public class HomeController implements Initializable {
         cicles = conexionXML.getCicles();
     }
 
+    // método para cargar y añadir los titulos de las peliculas al ListView
     private void loadFilms() {
-
         List<String> listaTitle = films.stream().map(film -> film.getTitol()).collect(Collectors.toList());
         images = films.stream().map(film -> film.getImage()).collect(Collectors.toList());
 
@@ -199,14 +210,19 @@ public class HomeController implements Initializable {
         listViewFilms.getItems().addAll(listObservableFilms);
     }
 
+    // método para cargar y añadir los titulos de los ciclos al ListView
     private void loadCiclos(){
         List<String> listaTitle = cicles.stream().map(sesion -> sesion.getNombre()).collect(Collectors.toList());
         listObservableCicles.addAll(listaTitle);
         listViewCiclos.getItems().addAll(listObservableCicles);
     }
 
+    // método que funcionará cuando demos click sobre una pelicula
+    // o un ciclo y activará los atributos de cada uno
     public void displaySelected(javafx.scene.input.MouseEvent mouseEvent) {
 
+        // si el ratón da click sobre un item del
+        // listView de Films entraremos en el if
         if(mouseEvent.getSource() == listViewFilms){
             String filmTitle = listViewFilms.getSelectionModel().getSelectedItem();
             List<Sesion> listaSesionesFilm;
@@ -233,7 +249,11 @@ public class HomeController implements Initializable {
                     }
                 }
             }
-        } else if(mouseEvent.getSource() == listViewCiclos){
+        }
+
+        // si el ratón da click sobre un item del listView
+        // de ciclos entraremos en el else if
+        else if(mouseEvent.getSource() == listViewCiclos){
             textTitleCiclo.setVisible(true);
             infoCiclo.setVisible(true);
             String cicleTitle = listViewCiclos.getSelectionModel().getSelectedItem();
@@ -270,6 +290,8 @@ public class HomeController implements Initializable {
         }
     }
 
+    // método para navegar a la ventana de sesiones,
+    // le pasaremos varios datos para rellenar su tableView
     public void PageSesion(ActionEvent event) throws IOException {
         Stage stage = new Stage();
         FXMLLoader loader = new FXMLLoader();
@@ -277,6 +299,8 @@ public class HomeController implements Initializable {
         Parent root = loader.load(getClass().getResource("sesion.fxml").openStream());
 
         SesionController sesionController = loader.getController();
+
+        // llámanos al método de SesionController que enviará los datos que necesitaremos
         sesionController.recibeInfoSesiones(tituloFilm, listObservableSesionsEnvio);
 
         stage.setScene(new Scene(root));
@@ -284,6 +308,8 @@ public class HomeController implements Initializable {
         stage.show();
     }
 
+    // método para navegar a la ventana de Peliculas,
+    // le pasaremos varios datos para rellenar su tableView
     public void PageFilmsCiclo(ActionEvent event) throws IOException {
         Stage stage = new Stage();
         FXMLLoader loader = new FXMLLoader();
@@ -291,6 +317,8 @@ public class HomeController implements Initializable {
         Parent root = loader.load(getClass().getResource("peliculas.fxml").openStream());
 
         PeliculasController peliculasController = loader.getController();
+
+        // llámanos al método de peliculasController que enviará los datos que necesitaremos
         peliculasController.recibeInfoSesiones(tituloCiclo, listObservableSesionsEnvio);
 
         stage.setScene(new Scene(root));
@@ -298,6 +326,9 @@ public class HomeController implements Initializable {
         stage.show();
     }
 
+    // método para hacer visible los datos de las
+    // peliculas que se activarán solo cuando
+    // demos click sobre una pelicula
     public void visibleInfoMovie(){
         textTitleFilm.setVisible(true);
         direcctorFilm.setVisible(true);
@@ -309,7 +340,9 @@ public class HomeController implements Initializable {
 
     }
 
-    public void opaqueInfo(){
+    // método para ocultar los datos de las peliculas y
+    // activarlos solo cuando tengan información
+    public void hideInfo(){
         textTitleFilm.setVisible(false);
         direcctorFilm.setVisible(false);
         directorTitle.setVisible(false);
@@ -321,6 +354,8 @@ public class HomeController implements Initializable {
         sinopsiFilm1.setVisible(false);
     }
 
+    // método que funcionará y rellenará la listView con las
+    // peliculas que contengan lo que escribamos en el textFiel
     public void buscador(MouseEvent mouseEvent) {
         listObservableFilms.clear();
         String titulo = textFieldPelicula.getText();

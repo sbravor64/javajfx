@@ -24,19 +24,14 @@ public class SesionController implements Initializable {
 
     @FXML
     Text sesionTitle;
-
     @FXML
     private TableView<Sesion> tableViewSesiones;
-
     @FXML
     private TableColumn<Sesion, String> tableColumnTitleCinema;
-
     @FXML
     private TableColumn<Sesion, String> tableColumnSesion;
-
     @FXML
     private TableColumn<Sesion, String> tableColumnFecha;
-
     @FXML
     private TableColumn<Sesion, String> tableColumnLocalidad;
 
@@ -44,6 +39,7 @@ public class SesionController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
     }
 
+    // método donde añadiremos las sesiones que tiene la pelicula seleccionada
     void añadirSesiones(){
         tableColumnTitleCinema.setCellValueFactory(new PropertyValueFactory("nomCine"));
         tableColumnSesion.setCellValueFactory(new PropertyValueFactory("sesionOrdre"));
@@ -54,6 +50,7 @@ public class SesionController implements Initializable {
         sesionTitle.setText(tituloFilm);
     }
 
+    // método que recibirá los datos del HomeController para rellenar la tableView
     public void recibeInfoSesiones(String tituloFilm, ObservableList<Sesion> listObservableSesions) {
         this.listObservableSesions = listObservableSesions;
         this.tituloFilm = tituloFilm;
