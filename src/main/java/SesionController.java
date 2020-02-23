@@ -40,9 +40,6 @@ public class SesionController implements Initializable {
     @FXML
     private TableColumn<Sesion, String> tableColumnLocalidad;
 
-    @FXML
-    private Circle btnCerrar;
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
     }
@@ -62,14 +59,5 @@ public class SesionController implements Initializable {
         this.tituloFilm = tituloFilm;
 
         añadirSesiones();
-    }
-
-    public void handlerMouseEvent(MouseEvent mouseEvent) {
-        if(mouseEvent.getSource() == btnCerrar){
-//            System.exit(0);
-            Stage stage = (Stage) btnCerrar.getScene().getWindow();
-//            tableViewSesiones.getItems().clear();
-            stage.close();
-        }
     }
 }

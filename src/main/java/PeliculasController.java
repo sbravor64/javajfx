@@ -18,37 +18,35 @@ import java.util.ResourceBundle;
 
 public class PeliculasController implements Initializable {
 
-    ObservableList<Film> listObservableFilms = FXCollections.observableArrayList();
+    ObservableList<Sesion> listObservableFilms = FXCollections.observableArrayList();
 
     String tituloCiclo;
 
-    @FXML
-    private Circle btnCerrar;
+
 
     @FXML
     private Text cicloTitle;
 
     @FXML
-    private TableView<Film> tableViewPeliculas;
+    private TableView<Sesion> tableViewPeliculas;
 
     @FXML
-    private TableColumn<Film, String> tableColumnTitleFilm;
+    private TableColumn<Sesion, String> tableColumnTitleFilm;
 
     @FXML
-    private TableColumn<Film, String> tableColumnDirectorFilm;
+    private TableColumn<Sesion, String> tableColumnFecha;
 
     @FXML
-    private TableColumn<Film, String> tableColumnEstrenoFilm;
+    private TableColumn<Sesion, String> tableColumnTitleCine;
 
     @FXML
-    private TableColumn<Film, String> tableColumnIdiomaFilm;
+    private TableColumn<Sesion, String> tableColumnLocalidad;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
     }
 
-    public void recibeInfoSesiones(String tituloCiclo, ObservableList<Film> listObservableFilms) {
+    public void recibeInfoSesiones(String tituloCiclo, ObservableList<Sesion> listObservableFilms) {
         this.listObservableFilms = listObservableFilms;
         this.tituloCiclo = tituloCiclo;
 
@@ -56,21 +54,13 @@ public class PeliculasController implements Initializable {
     }
 
     private void añadirPeliculas() {
-        tableColumnDirectorFilm.setCellValueFactory(new PropertyValueFactory("direccio"));
-        tableColumnTitleFilm.setCellValueFactory(new PropertyValueFactory("titol"));
-        tableColumnIdiomaFilm.setCellValueFactory(new PropertyValueFactory("idioma"));
-        tableColumnEstrenoFilm.setCellValueFactory(new PropertyValueFactory("any"));
+        tableColumnFecha.setCellValueFactory(new PropertyValueFactory("fecha"));
+        tableColumnTitleFilm.setCellValueFactory(new PropertyValueFactory("titulo"));
+        tableColumnTitleCine.setCellValueFactory(new PropertyValueFactory("nomCine"));
+        tableColumnLocalidad.setCellValueFactory(new PropertyValueFactory("localidad"));
 
         tableViewPeliculas.setItems(listObservableFilms);
         cicloTitle.setText(tituloCiclo);
     }
 
-    public void handlerMouseEvent(MouseEvent mouseEvent) {
-        if (mouseEvent.getSource() == btnCerrar) {
-//            System.exit(0);
-            Stage stage = (Stage) btnCerrar.getScene().getWindow();
-//            tableViewSesiones.getItems().clear();
-            stage.close();
-        }
-    }
 }

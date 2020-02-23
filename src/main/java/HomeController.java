@@ -8,18 +8,16 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Side;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.chart.PieChart;
+import javafx.scene.chart.*;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
@@ -28,10 +26,10 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
-public class SampleController implements Initializable {
-    private final ObservableList<PieChart.Data> dataCharts = FXCollections.observableArrayList();
+public class HomeController implements Initializable {
 
     String tituloFilm;
     String tituloCiclo;
@@ -48,7 +46,7 @@ public class SampleController implements Initializable {
     private double x=0, y=0;
 
     ObservableList<Sesion> listObservableSesionsEnvio =FXCollections.observableArrayList();
-    ObservableList<Film> listObservableFilmsEnvio = FXCollections.observableArrayList();
+//    ObservableList<Film> listObservableFilmsEnvio = FXCollections.observableArrayList();
 
     ObservableList<String> listObservableFilms =FXCollections.observableArrayList();
     ObservableList<String> listObservableCicles =FXCollections.observableArrayList();
@@ -70,6 +68,10 @@ public class SampleController implements Initializable {
     @FXML
     private Text añoTitle;
     @FXML
+    private Text sinopsiTitle;
+    @FXML
+    private TextArea sinopsiFilm1;
+    @FXML
     private TextField textFieldPelicula;
     @FXML
     private Button buttonBuscar;
@@ -84,16 +86,21 @@ public class SampleController implements Initializable {
     @FXML
     private ImageView imageCiclo;
 
-    @FXML
-    private Circle btnCerrar;
+
     @FXML
     private TabPane tabPane;
     @FXML
     private Pane pane;
 
-    //diagrama 1
+    //diagrama 1y2
     @FXML
     private PieChart pieChart;
+    @FXML
+    private BarChart<?,?> barChart;
+    @FXML
+    private NumberAxis numberAxis;
+    @FXML
+    private CategoryAxis categoryAxis;
 
 
     @FXML
@@ -103,13 +110,14 @@ public class SampleController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
+            sinopsiFilm1.setWrapText(true);
             pane.setVisible(false);
             connectedXML();
             loadFilms();
             loadCiclos();
-            makeDragable();
-            opaqueInfoMovie();
-            diagrama();
+            opaqueInfo();
+            rellenardiagrama1();
+            rellenarDiagrama2();
         } catch (JAXBException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -118,7 +126,9 @@ public class SampleController implements Initializable {
     }
 
     //
-    private void diagrama(){
+    private void rellenardiagrama1(){
+        ObservableList<PieChart.Data> dataCharts = FXCollections.observableArrayList();
+
         List<Integer> años = films.stream()
                 .map(film -> film.getAny())
                 .filter(i -> i > 0 && i < 3000).distinct()
@@ -150,6 +160,21 @@ public class SampleController implements Initializable {
                 }
             });
         });
+    }
+
+    private void rellenarDiagrama2(){
+        XYChart.Series dataCharts = new XYChart.Series<>();
+
+        List<String> provincias = cinemas.stream()
+                .filter(cinema -> !cinema.getProvincia().equals("--"))
+                .map(cinema -> cinema.getProvincia())
+                .collect(Collectors.toList());
+
+        provincias.forEach(pro -> {
+            long numResultat= cinemas.stream().filter(cinema -> cinema.getProvincia().equals(pro)).count();
+            dataCharts.getData().add(new XYChart.Data(pro, numResultat));
+        });
+        barChart.getData().add(dataCharts);
     }
 
     private void connectedXML() throws JAXBException, IOException {
@@ -195,6 +220,7 @@ public class SampleController implements Initializable {
                         imageFilm.setImage(new Image(url+f.getImage()));
                         direcctorFilm.setText(f.getDireccio());
                         añoFilm.setText(String.valueOf(f.getAny()));
+                        sinopsiFilm1.setText(f.getSinopsi());
 
                         listObservableSesionsEnvio.clear();
 
@@ -208,33 +234,35 @@ public class SampleController implements Initializable {
                 }
             }
         } else if(mouseEvent.getSource() == listViewCiclos){
+            textTitleCiclo.setVisible(true);
+            infoCiclo.setVisible(true);
             String cicleTitle = listViewCiclos.getSelectionModel().getSelectedItem();
             textTitleCiclo.setText(cicleTitle);
 
-            List<Film> listaFilmsCicle = new ArrayList<>();
+            List<Sesion> listaFilmsCicle = new ArrayList<>();
 
             for (Cicle c: cicles) {
                 if(c.getNombre().equals(cicleTitle)){
                     infoCiclo.setText(c.getInfo());
                     imageCiclo.setImage(new Image(url+c.getImg()));
 
-                    listObservableFilmsEnvio.clear();
-                    //atributos que envio a la nueva ventana (films)
+                    listObservableSesionsEnvio.clear();
 
                     tituloCiclo = c.getNombre();
 
                     sesions.forEach(sesion -> {
                         if(sesion.getCicleID()==c.getIdCiclo()){
                             films.forEach(film -> {
-                                if(film.getIdFilm() == sesion.getCicleID()){
-                                    listaFilmsCicle.add(film);
+                                if(film.getIdFilm() == sesion.getIdFilm()){
+                                    listaFilmsCicle.add(sesion);
                                 }
                             });
-//                            listaFilmsCicle = films.stream().filter(film -> film.getIdFilm() == sesion.getCicleID()).collect(Collectors.toList());
                         }
                     });
 
-                    listObservableFilmsEnvio.addAll(listaFilmsCicle);
+                    listaFilmsCicle.forEach(System.out::println);
+
+                    listObservableSesionsEnvio.addAll(listaFilmsCicle);
                     listaFilmsCicle.clear();
 
                 }
@@ -252,7 +280,7 @@ public class SampleController implements Initializable {
         sesionController.recibeInfoSesiones(tituloFilm, listObservableSesionsEnvio);
 
         stage.setScene(new Scene(root));
-        stage.initStyle(StageStyle.UNDECORATED);
+        stage.setResizable(false);
         stage.show();
     }
 
@@ -263,32 +291,11 @@ public class SampleController implements Initializable {
         Parent root = loader.load(getClass().getResource("peliculas.fxml").openStream());
 
         PeliculasController peliculasController = loader.getController();
-        peliculasController.recibeInfoSesiones(tituloCiclo, listObservableFilmsEnvio);
+        peliculasController.recibeInfoSesiones(tituloCiclo, listObservableSesionsEnvio);
 
         stage.setScene(new Scene(root));
-        stage.initStyle(StageStyle.UNDECORATED);
+        stage.setResizable(false);
         stage.show();
-    }
-
-    public void handlerMouseEvent(MouseEvent mouseEvent) {
-        if(mouseEvent.getSource() == btnCerrar){
-//            System.exit(0);
-            Stage stage = (Stage) btnCerrar.getScene().getWindow();
-            stage.close();
-        }
-    }
-
-    public void makeDragable(){
-        tabPane.setOnMousePressed((event -> {
-            x=event.getSceneX();
-            y=event.getSceneY();
-        }));
-
-        tabPane.setOnMouseDragged((event -> {
-            Stage stage = (Stage) btnCerrar.getScene().getWindow();
-            stage.setX(event.getScreenX()-x);
-            stage.setY(event.getScreenY()-y);
-        }));
     }
 
     public void visibleInfoMovie(){
@@ -297,14 +304,21 @@ public class SampleController implements Initializable {
         directorTitle.setVisible(true);
         añoFilm.setVisible(true);
         añoTitle.setVisible(true);
+        sinopsiFilm1.setVisible(true);
+        sinopsiTitle.setVisible(true);
+
     }
 
-    public void opaqueInfoMovie(){
+    public void opaqueInfo(){
         textTitleFilm.setVisible(false);
         direcctorFilm.setVisible(false);
         directorTitle.setVisible(false);
         añoFilm.setVisible(false);
         añoTitle.setVisible(false);
+        textTitleCiclo.setVisible(false);
+        infoCiclo.setVisible(false);
+        sinopsiTitle.setVisible(false);
+        sinopsiFilm1.setVisible(false);
     }
 
     public void buscador(MouseEvent mouseEvent) {
