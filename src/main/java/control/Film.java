@@ -31,6 +31,9 @@ public class Film implements Serializable {
     @XmlElement(name="IDIOMA_x0020_ORIGINAL")
     String idioma;
 
+    @XmlElement(name = "TRAILER")
+    String trailer;
+
     String buscar;
 
     @Override
@@ -93,6 +96,10 @@ public class Film implements Serializable {
 
     public String getIdioma() {
         return idioma;
+    }
+
+    public String getTrailer() {
+        return trailer;
     }
 }
 

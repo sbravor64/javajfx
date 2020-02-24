@@ -14,6 +14,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -32,6 +34,8 @@ public class HomeController implements Initializable {
 
     String tituloFilm;
     String tituloCiclo;
+    String trailer;
+
 
     ConexionXML conexionXML;
     List<String> images;
@@ -73,6 +77,10 @@ public class HomeController implements Initializable {
     private TextField textFieldPelicula;
     @FXML
     private Button buttonBuscar;
+    @FXML
+    private Button buttontrailerFilm;
+    @FXML
+    private Button buttonSesion;
 
     // atributos del ciclo
     @FXML
@@ -101,15 +109,18 @@ public class HomeController implements Initializable {
     private CategoryAxis categoryAxis;
 
 
-    @FXML
-    private Button buttonSesion;
-
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
+
+            //activamos la opción para que el textField tenga varias lineas
             sinopsiFilm1.setWrapText(true);
+
+            // ocultamos el pane para visualizar los valores del diagrama uno
+            // cuando estemos solamente con el ratón por encima
             pane.setVisible(false);
+
+            //varios metones
             connectedXML();
             loadFilms();
             loadCiclos();
@@ -224,6 +235,7 @@ public class HomeController implements Initializable {
         // si el ratón da click sobre un item del
         // listView de Films entraremos en el if
         if(mouseEvent.getSource() == listViewFilms){
+
             String filmTitle = listViewFilms.getSelectionModel().getSelectedItem();
             List<Sesion> listaSesionesFilm;
             if(filmTitle==null|| filmTitle.isEmpty()){
@@ -237,6 +249,8 @@ public class HomeController implements Initializable {
                         direcctorFilm.setText(f.getDireccio());
                         añoFilm.setText(String.valueOf(f.getAny()));
                         sinopsiFilm1.setText(f.getSinopsi());
+
+                        trailer = f.getTrailer();
 
                         listObservableSesionsEnvio.clear();
 
@@ -256,6 +270,7 @@ public class HomeController implements Initializable {
         else if(mouseEvent.getSource() == listViewCiclos){
             textTitleCiclo.setVisible(true);
             infoCiclo.setVisible(true);
+
             String cicleTitle = listViewCiclos.getSelectionModel().getSelectedItem();
             textTitleCiclo.setText(cicleTitle);
 
@@ -280,15 +295,13 @@ public class HomeController implements Initializable {
                         }
                     });
 
-                    listaFilmsCicle.forEach(System.out::println);
-
                     listObservableSesionsEnvio.addAll(listaFilmsCicle);
                     listaFilmsCicle.clear();
-
                 }
             }
         }
     }
+
 
     // método para navegar a la ventana de sesiones,
     // le pasaremos varios datos para rellenar su tableView
@@ -337,6 +350,8 @@ public class HomeController implements Initializable {
         añoTitle.setVisible(true);
         sinopsiFilm1.setVisible(true);
         sinopsiTitle.setVisible(true);
+        buttonSesion.setVisible(true);
+        buttontrailerFilm.setVisible(true);
 
     }
 
@@ -352,6 +367,8 @@ public class HomeController implements Initializable {
         infoCiclo.setVisible(false);
         sinopsiTitle.setVisible(false);
         sinopsiFilm1.setVisible(false);
+        buttonSesion.setVisible(false);
+        buttontrailerFilm.setVisible(false);
     }
 
     // método que funcionará y rellenará la listView con las
@@ -366,5 +383,19 @@ public class HomeController implements Initializable {
         listViewFilms.getItems().clear();
         listViewFilms.getItems().addAll(listObservableFilms);
 
+    }
+
+    public void showTrailer(ActionEvent event) throws IOException {
+        Stage stage = new Stage();
+        FXMLLoader loader = new FXMLLoader();
+
+        Parent root = loader.load(getClass().getResource("trailerFilm.fxml").openStream());
+
+        TrailerFilmController trailerFilmController = loader.getController();
+        trailerFilmController.recibeUrlTrailer(trailer);
+
+        stage.setScene(new Scene(root));
+        stage.setResizable(false);
+        stage.show();
     }
 }

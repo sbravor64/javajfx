@@ -17,13 +17,13 @@
                            <children>
                               <AnchorPane layoutX="1.0" layoutY="-5.0" prefHeight="576.0" prefWidth="800.0" style="-fx-background-color: #44007A;">
                                  <children>
-                                    <ListView fx:id="listViewFilms" layoutX="68.0" layoutY="109.0" onMouseClicked="#displaySelected" prefHeight="337.0" prefWidth="289.0" style="-fx-background-color: #540096;" AnchorPane.bottomAnchor="41.0" AnchorPane.leftAnchor="68.0" AnchorPane.rightAnchor="473.0" AnchorPane.topAnchor="109.0">
+                                    <ListView fx:id="listViewFilms" layoutX="54.0" layoutY="98.0" onMouseClicked="#displaySelected" prefHeight="426.0" prefWidth="290.0" style="-fx-background-color: #540096;" AnchorPane.bottomAnchor="52.0" AnchorPane.leftAnchor="54.0" AnchorPane.rightAnchor="456.0" AnchorPane.topAnchor="98.0">
                                        <padding>
                                           <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                        </padding>
                                     </ListView>
-                              <TextField fx:id="textFieldPelicula" layoutX="77.0" layoutY="60.0" prefHeight="25.0" prefWidth="197.0" promptText="Buscar pelicula" />
-                              <Button fx:id="buttonBuscar" layoutX="284.0" layoutY="60.0" mnemonicParsing="false" onMouseClicked="#buscador" prefHeight="25.0" prefWidth="67.0" text="Buscar" />
+                              <TextField fx:id="textFieldPelicula" layoutX="63.0" layoutY="49.0" prefHeight="25.0" prefWidth="197.0" promptText="Buscar pelicula" />
+                              <Button fx:id="buttonBuscar" layoutX="270.0" layoutY="49.0" mnemonicParsing="false" onMouseClicked="#buscador" prefHeight="25.0" prefWidth="67.0" text="Buscar" />
                                     <AnchorPane cache="true" layoutX="402.0" layoutY="-7.0" prefHeight="591.0" prefWidth="405.0" style="-fx-background-color: white;" AnchorPane.bottomAnchor="-8.0" AnchorPane.leftAnchor="402.0" AnchorPane.rightAnchor="-7.0" AnchorPane.topAnchor="-7.0">
                                        <children>
                                           <AnchorPane layoutY="6.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="573.0" prefWidth="392.0" style="-fx-background-color: #ffffff;">
@@ -53,6 +53,7 @@
                                              </font>
                                           </Text>
                                           <TextArea fx:id="sinopsiFilm1" focusTraversable="false" layoutX="35.0" layoutY="319.0" prefHeight="185.0" prefWidth="327.0" style="-fx-background-color: #ffffff;" />
+                                          <Button fx:id="buttontrailerFilm" layoutX="171.0" layoutY="256.0" mnemonicParsing="false" onAction="#showTrailer" text="Ver trailer" />
                                              </children>
                                           </AnchorPane>
                                        </children>
@@ -81,7 +82,7 @@
                                     <Button fx:id="buttonCiclo" layoutX="254.0" layoutY="520.0" mnemonicParsing="false" onAction="#PageFilmsCiclo" prefHeight="26.0" prefWidth="112.0" text="Ver Peliculas" />
                                  </children>
                               </AnchorPane>
-                              <ListView fx:id="listViewCiclos" layoutX="57.0" layoutY="59.0" onMouseClicked="#displaySelected" prefHeight="245.0" prefWidth="289.0" style="-fx-background-color: #540096;">
+                              <ListView fx:id="listViewCiclos" layoutX="57.0" layoutY="59.0" onMouseClicked="#displaySelected" prefHeight="263.0" prefWidth="289.0" style="-fx-background-color: #540096;">
                                  <padding>
                                     <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                  </padding>
