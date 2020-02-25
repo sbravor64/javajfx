@@ -112,7 +112,7 @@
                             <CategoryAxis fx:id="categoryAxis" label="Provincias" side="BOTTOM" />
                           </xAxis>
                           <yAxis>
-                            <NumberAxis fx:id="numberAxis" side="LEFT" />
+                            <NumberAxis fx:id="numberAxis" label="CInes" side="LEFT" />
                           </yAxis>
                         </BarChart>
                      </children>
